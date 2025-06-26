@@ -1,0 +1,32 @@
+name: Build OpenWrt Docker
+
+on:
+  push:
+    branches:
+      - main  # Passe den Branch an, wenn du einen anderen verwendest
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        run: docker build -t openwrt-multistage .
+
+      - name: Create Container and Extract Build Artifacts
+        run: |
+          docker create --name openwrt-export openwrt-multistage
+          docker cp openwrt-export:/build ./openwrt-build
+          docker rm openwrt-export
+
+      - name: Upload Firmware
+        uses: actions/upload-artifact@v3
+        with:
+          name: openwrt-firmware
+          path: ./openwrt-build
