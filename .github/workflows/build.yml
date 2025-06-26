@@ -7,7 +7,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, openwrt]  # Hier wird dein spezifischer Runner angesprochen
+
 
     steps:
       - name: Checkout Repository
