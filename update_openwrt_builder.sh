@@ -1,14 +1,11 @@
 #!/bin/bash
 
 # Variablen
-ZIP_URL="https://chat.openai.com/sandbox/openwrt-docker-build.zip"  # Lokaler Download-Link
 BRANCH="main"
 
 # Arbeitsverzeichnis = aktuelles Verzeichnis
 CURRENT_DIR="$(pwd)"
 
-echo "Lade ZIP-Datei herunter..."
-wget -O openwrt-docker-build.zip "$ZIP_URL"
 
 echo "Entpacke ZIP-Datei ins aktuelle Verzeichnis..."
 unzip -o openwrt-docker-build.zip
