@@ -36,7 +36,10 @@ RUN apt update && apt install -y \
     bc \
     && apt clean
 
-# Arbeitsverzeichnis vorbereiten
+# Environment-Variable für configure freischalten
+ENV FORCE_UNSAFE_CONFIGURE=1
+
+# Arbeitsverzeichnis
 WORKDIR /opt
 
 # OpenWrt Repository klonen
@@ -47,23 +50,23 @@ WORKDIR /opt/openwrt
 # OpenWrt Version auswählen
 RUN git checkout v23.05.3
 
-# Feeds aktualisieren und Pakete installieren
+# Feeds aktualisieren
 RUN ./scripts/feeds update -a && ./scripts/feeds install -a
 
 # Standard-Konfiguration laden
 RUN make defconfig
 
-# Tools stabil (sequentiell) bauen
+# Tools stabil bauen
 RUN make tools/install -j1 V=sc
 
-# Toolchain stabil (sequentiell) bauen
+# Toolchain stabil bauen
 RUN make toolchain/install -j1 V=sc
 
-# Download aller Pakete vorbereiten
+# Pakete herunterladen
 RUN make -j$(nproc) download V=sc || true
 
 # OpenWrt komplett bauen
 RUN make -j$(nproc) V=s
 
-# Arbeitsverzeichnis auf die fertigen Images setzen
+# Fertiges Arbeitsverzeichnis
 WORKDIR /opt/openwrt/bin
